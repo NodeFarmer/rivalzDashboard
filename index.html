@@ -116,8 +116,20 @@
     let sortColumn = 'lastPing';
     let sortDirection = 'desc';
 
+    // On page load, check if wallet address is in localStorage
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedWalletAddress = localStorage.getItem('walletAddress');
+      if (savedWalletAddress) {
+        document.getElementById('walletAddress').value = savedWalletAddress;
+      }
+    });
+
     document.getElementById('fetchData').addEventListener('click', async () => {
       const walletAddress = document.getElementById('walletAddress').value;
+      
+      // Save wallet address to localStorage
+      localStorage.setItem('walletAddress', walletAddress);
+      
       const url = `https://be.rivalz.ai/api-v1/orbit-db/find-by-wallet-address/${walletAddress}/0/9999`;
       const fetchText = document.getElementById('fetchText');
       const spinner = document.getElementById('spinner');
