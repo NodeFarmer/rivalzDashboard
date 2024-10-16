@@ -41,7 +41,7 @@
     </div>
 
     <!-- Result Table with Pagination and Sorting -->
-    <div class="w-full max-w-4xl">
+    <div class="w-full max-w-4xl overflow-x-auto">
       <div id="result" class="hidden bg-gray-900 p-6 rounded-lg shadow-lg">
         <table class="w-full table-auto bg-gray-800 rounded-lg shadow-lg text-sm">
           <thead class="bg-gray-700">
@@ -51,9 +51,24 @@
               <th class="py-3 px-4 sortable" data-column="storageUsage">Storage Usage</th>
               <th class="py-3 px-4 sortable" data-column="totalCpuCore">CPU Cores</th>
               <th class="py-3 px-4 sortable" data-column="cpuGhz">CPU GHz</th>
+              <th class="py-3 px-4 sortable" data-column="cpuGhzMax">CPU Max GHz</th>
               <th class="py-3 px-4 sortable" data-column="totalRamSize">RAM Size</th>
+              <th class="py-3 px-4 sortable" data-column="ramMhz">RAM MHz</th>
               <th class="py-3 px-4 sortable" data-column="internetSpeed">Internet Speed</th>
+              <th class="py-3 px-4 sortable" data-column="storageType">Storage Type</th>
               <th class="py-3 px-4 sortable" data-column="type">Node Type</th>
+              <th class="py-3 px-4 sortable" data-column="upTimePerDay">Uptime/Day</th>
+              <th class="py-3 px-4 sortable" data-column="currentPoint">Current Point</th>
+              <th class="py-3 px-4 sortable" data-column="withdrawnPoint">Withdrawn Point</th>
+              <th class="py-3 px-4 sortable" data-column="pingNumberPerDay">Pings/Day</th>
+              <th class="py-3 px-4 sortable" data-column="totalMinuteRun">Total Min Run</th>
+              <th class="py-3 px-4 sortable" data-column="storageUsed">Storage Used</th>
+              <th class="py-3 px-4 sortable" data-column="teraFlops">TeraFlops</th>
+              <th class="py-3 px-4 sortable" data-column="liveTimeMinute">Live Time (Minutes)</th>
+              <th class="py-3 px-4 sortable" data-column="lastPing">Last Ping</th>
+              <th class="py-3 px-4 sortable" data-column="createdAt">Created At</th>
+              <th class="py-3 px-4 sortable" data-column="updatedAt">Updated At</th>
+              <th class="py-3 px-4 sortable" data-column="pph">PPH</th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
@@ -132,9 +147,24 @@
             <td class="py-3 px-4">${node.storageUsage}</td>
             <td class="py-3 px-4">${node.totalCpuCore}</td>
             <td class="py-3 px-4">${node.cpuGhz}</td>
+            <td class="py-3 px-4">${node.cpuGhzMax}</td>
             <td class="py-3 px-4">${node.totalRamSize}</td>
+            <td class="py-3 px-4">${node.ramMhz}</td>
             <td class="py-3 px-4">${node.internetSpeed}</td>
+            <td class="py-3 px-4">${node.storageType}</td>
             <td class="py-3 px-4">${node.type}</td>
+            <td class="py-3 px-4">${node.upTimePerDay}</td>
+            <td class="py-3 px-4">${node.currentPoint}</td>
+            <td class="py-3 px-4">${node.withdrawnPoint}</td>
+            <td class="py-3 px-4">${node.pingNumberPerDay}</td>
+            <td class="py-3 px-4">${node.totalMinuteRun}</td>
+            <td class="py-3 px-4">${node.storageUsed}</td>
+            <td class="py-3 px-4">${node.teraFlops}</td>
+            <td class="py-3 px-4">${node.liveTimeMinute}</td>
+            <td class="py-3 px-4">${new Date(node.lastPing).toLocaleString()}</td>
+            <td class="py-3 px-4">${new Date(node.createdAt).toLocaleString()}</td>
+            <td class="py-3 px-4">${new Date(node.updatedAt).toLocaleString()}</td>
+            <td class="py-3 px-4">${node.pph}</td>
           </tr>
         `;
         tableBody.insertAdjacentHTML('beforeend', row);
