@@ -15,7 +15,7 @@
 
   <div class="min-h-screen flex flex-col items-center">
     <h1 class="text-center text-4xl font-bold mt-6">Rivalz Dashboard</h1>
-    <span class="text-center text-bold text-gray-400 text-md mb-6">v1.0</span>
+    <span class="text-center text-bold text-gray-400 text-md mb-6">v1.1</span>
 
     <!-- Input form -->
     <div class="w-full max-w-md mb-6">
@@ -43,7 +43,8 @@
 
     <!-- Result Table with Pagination and Sorting -->
     <div class="w-full">
-      <div id="result" class="hidden bg-gray-900 p-6 rounded-lg shadow-lg  overflow-x-auto">
+      <div id="result" class="hidden bg-gray-900 p-6 rounded-lg shadow-lg">
+        <div class="  overflow-x-auto">
         <table class="w-full table-auto bg-gray-800 rounded-lg shadow-lg text-sm">
           <thead class="bg-gray-700">
             <tr>
@@ -74,13 +75,14 @@
           </thead>
           <tbody id="tableBody"></tbody>
         </table>
-      </div>
-      <!-- Pagination -->
+        </div>
+         <!-- Pagination -->
         <div class="flex justify-between mt-4">
           <button id="prevPage" class="bg-gray-700 py-2 px-4 rounded-lg">Previous</button>
           <span id="pageInfo" class="text-sm"></span>
           <button id="nextPage" class="bg-gray-700 py-2 px-4 rounded-lg">Next</button>
         </div>
+      </div>
     </div>
   </div>
 
