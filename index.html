@@ -71,7 +71,7 @@
           <table class="w-full table-auto bg-gray-800 rounded-lg shadow-lg text-sm">
             <thead class="bg-gray-700">
               <tr>
-                <th class="py-3 px-4 sortable" data-column="walletAddress">Wallet Address</th>
+                <th class="py-3 px-4 sortable" data-column="_id">Id</th>
                 <th class="py-3 px-4 sortable" data-column="verified">Verified</th>
                 <th class="py-3 px-4 sortable" data-column="storageUsage">Storage Usage</th>
                 <th class="py-3 px-4 sortable" data-column="totalCpuCore">CPU Cores</th>
@@ -193,7 +193,7 @@
       pageData.forEach(node => {
         const row = `
           <tr>
-            <td class="py-3 px-4">${node.walletAddress}</td>
+            <td class="py-3 px-4">${node._id}</td>
             <td class="py-3 px-4">${node.verified}</td>
             <td class="py-3 px-4">${node.storageUsage}</td>
             <td class="py-3 px-4">${node.totalCpuCore}</td>
