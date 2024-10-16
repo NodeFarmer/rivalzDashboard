@@ -3,16 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crypto Data Fetcher</title>
+  <title>Rivalz Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .sortable:hover {
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body class="bg-black text-white font-mono">
 
-  <div class="min-h-screen flex items-center justify-center">
-    <div class="w-full max-w-md">
-      <h1 class="text-center text-3xl font-bold mb-6">Crypto Node Info</h1>
+  <div class="min-h-screen flex flex-col items-center">
+    <h1 class="text-center text-4xl font-bold my-6">Rivalz Dashboard</h1>
 
-      <!-- Input form -->
+    <!-- Input form -->
+    <div class="w-full max-w-md mb-6">
       <div class="bg-gray-900 p-6 rounded-lg shadow-lg">
         <label for="walletAddress" class="block text-sm font-medium mb-2">Enter Wallet Address</label>
         <input type="text" id="walletAddress" placeholder="0x..." class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 mb-4" />
@@ -21,28 +26,56 @@
           Fetch Data
         </button>
       </div>
+    </div>
 
-      <!-- Result Table -->
-      <div id="result" class="mt-6 hidden">
-        <table class="w-full table-auto bg-gray-900 rounded-lg shadow-lg text-sm">
-          <thead class="bg-gray-800">
+    <!-- Dashboard Blocks -->
+    <div class="flex space-x-6 mb-6" id="dashboard" class="hidden">
+      <div class="bg-gray-900 p-6 rounded-lg shadow-lg w-48 text-center">
+        <p class="text-2xl font-bold" id="totalNode">0</p>
+        <p class="text-sm">Total Nodes</p>
+      </div>
+      <div class="bg-gray-900 p-6 rounded-lg shadow-lg w-48 text-center">
+        <p class="text-2xl font-bold" id="nodeActive">0</p>
+        <p class="text-sm">Active Nodes</p>
+      </div>
+    </div>
+
+    <!-- Result Table with Pagination and Sorting -->
+    <div class="w-full max-w-4xl">
+      <div id="result" class="hidden bg-gray-900 p-6 rounded-lg shadow-lg">
+        <table class="w-full table-auto bg-gray-800 rounded-lg shadow-lg text-sm">
+          <thead class="bg-gray-700">
             <tr>
-              <th class="py-3 px-4 text-left">Total Nodes</th>
-              <th class="py-3 px-4 text-left">Active Nodes</th>
+              <th class="py-3 px-4 sortable" data-column="walletAddress">Wallet Address</th>
+              <th class="py-3 px-4 sortable" data-column="verified">Verified</th>
+              <th class="py-3 px-4 sortable" data-column="storageUsage">Storage Usage</th>
+              <th class="py-3 px-4 sortable" data-column="totalCpuCore">CPU Cores</th>
+              <th class="py-3 px-4 sortable" data-column="cpuGhz">CPU GHz</th>
+              <th class="py-3 px-4 sortable" data-column="totalRamSize">RAM Size</th>
+              <th class="py-3 px-4 sortable" data-column="internetSpeed">Internet Speed</th>
+              <th class="py-3 px-4 sortable" data-column="type">Node Type</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="py-3 px-4" id="totalNode">-</td>
-              <td class="py-3 px-4" id="nodeActive">-</td>
-            </tr>
-          </tbody>
+          <tbody id="tableBody"></tbody>
         </table>
+
+        <!-- Pagination -->
+        <div class="flex justify-between mt-4">
+          <button id="prevPage" class="bg-gray-700 py-2 px-4 rounded-lg">Previous</button>
+          <span id="pageInfo" class="text-sm"></span>
+          <button id="nextPage" class="bg-gray-700 py-2 px-4 rounded-lg">Next</button>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
+    let currentPage = 1;
+    const rowsPerPage = 10;
+    let nodes = [];
+    let sortColumn = '';
+    let sortDirection = 'asc';
+
     document.getElementById('fetchData').addEventListener('click', async () => {
       const walletAddress = document.getElementById('walletAddress').value;
       const url = `https://be.rivalz.ai/api-v1/orbit-db/find-by-wallet-address/${walletAddress}/0/9999`;
@@ -52,16 +85,89 @@
         const data = await response.json();
 
         if (data.status === 200) {
+          nodes = data.data.nodesV2Pagination;
+
           document.getElementById('totalNode').textContent = data.data.totalNode;
           document.getElementById('nodeActive').textContent = data.data.nodeActive;
 
+          document.getElementById('dashboard').classList.remove('hidden');
           document.getElementById('result').classList.remove('hidden');
+
+          displayTable();
         } else {
           alert('Failed to fetch data.');
         }
       } catch (error) {
         alert('Error fetching data. Please try again.');
       }
+    });
+
+    function displayTable() {
+      const tableBody = document.getElementById('tableBody');
+      tableBody.innerHTML = '';
+
+      const start = (currentPage - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      const pageData = nodes.slice(start, end);
+
+      if (sortColumn) {
+        pageData.sort((a, b) => {
+          let valA = a[sortColumn];
+          let valB = b[sortColumn];
+
+          if (typeof valA === 'string') valA = valA.toLowerCase();
+          if (typeof valB === 'string') valB = valB.toLowerCase();
+
+          if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+          if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+          return 0;
+        });
+      }
+
+      pageData.forEach(node => {
+        const row = `
+          <tr>
+            <td class="py-3 px-4">${node.walletAddress}</td>
+            <td class="py-3 px-4">${node.verified}</td>
+            <td class="py-3 px-4">${node.storageUsage}</td>
+            <td class="py-3 px-4">${node.totalCpuCore}</td>
+            <td class="py-3 px-4">${node.cpuGhz}</td>
+            <td class="py-3 px-4">${node.totalRamSize}</td>
+            <td class="py-3 px-4">${node.internetSpeed}</td>
+            <td class="py-3 px-4">${node.type}</td>
+          </tr>
+        `;
+        tableBody.insertAdjacentHTML('beforeend', row);
+      });
+
+      document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${Math.ceil(nodes.length / rowsPerPage)}`;
+    }
+
+    document.getElementById('prevPage').addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        displayTable();
+      }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', () => {
+      if (currentPage < Math.ceil(nodes.length / rowsPerPage)) {
+        currentPage++;
+        displayTable();
+      }
+    });
+
+    document.querySelectorAll('.sortable').forEach(header => {
+      header.addEventListener('click', () => {
+        const column = header.getAttribute('data-column');
+        if (sortColumn === column) {
+          sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+          sortColumn = column;
+          sortDirection = 'asc';
+        }
+        displayTable();
+      });
     });
   </script>
 </body>
