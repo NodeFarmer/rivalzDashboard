@@ -30,7 +30,7 @@
     </div>
 
     <!-- Dashboard Blocks -->
-    <div class="flex space-x-6 mb-6" id="dashboard" class="hidden">
+    <div class="flex space-x-6 mb-6" id="dashboard">
       <div class="bg-gray-900 p-6 rounded-lg shadow-lg w-48 text-center">
         <p class="text-2xl font-bold" id="totalNode">0</p>
         <p class="text-sm">Total Nodes</p>
@@ -42,41 +42,41 @@
     </div>
 
     <!-- Result Table with Pagination and Sorting -->
-    <div class="w-full">
+    <div class="w-full max-w-6xl">
       <div id="result" class="hidden bg-gray-900 p-6 rounded-lg shadow-lg">
-        <div class="  overflow-x-auto">
-        <table class="w-full table-auto bg-gray-800 rounded-lg shadow-lg text-sm">
-          <thead class="bg-gray-700">
-            <tr>
-              <th class="py-3 px-4 sortable" data-column="walletAddress">Wallet Address</th>
-              <th class="py-3 px-4 sortable" data-column="verified">Verified</th>
-              <th class="py-3 px-4 sortable" data-column="storageUsage">Storage Usage</th>
-              <th class="py-3 px-4 sortable" data-column="totalCpuCore">CPU Cores</th>
-              <th class="py-3 px-4 sortable" data-column="cpuGhz">CPU GHz</th>
-              <th class="py-3 px-4 sortable" data-column="cpuGhzMax">CPU Max GHz</th>
-              <th class="py-3 px-4 sortable" data-column="totalRamSize">RAM Size</th>
-              <th class="py-3 px-4 sortable" data-column="ramMhz">RAM MHz</th>
-              <th class="py-3 px-4 sortable" data-column="internetSpeed">Internet Speed</th>
-              <th class="py-3 px-4 sortable" data-column="storageType">Storage Type</th>
-              <th class="py-3 px-4 sortable" data-column="type">Node Type</th>
-              <th class="py-3 px-4 sortable" data-column="upTimePerDay">Uptime/Day</th>
-              <th class="py-3 px-4 sortable" data-column="currentPoint">Current Point</th>
-              <th class="py-3 px-4 sortable" data-column="withdrawnPoint">Withdrawn Point</th>
-              <th class="py-3 px-4 sortable" data-column="pingNumberPerDay">Pings/Day</th>
-              <th class="py-3 px-4 sortable" data-column="totalMinuteRun">Total Min Run</th>
-              <th class="py-3 px-4 sortable" data-column="storageUsed">Storage Used</th>
-              <th class="py-3 px-4 sortable" data-column="teraFlops">TeraFlops</th>
-              <th class="py-3 px-4 sortable" data-column="liveTimeMinute">Live Time (Minutes)</th>
-              <th class="py-3 px-4 sortable" data-column="lastPing">Last Ping</th>
-              <th class="py-3 px-4 sortable" data-column="createdAt">Created At</th>
-              <th class="py-3 px-4 sortable" data-column="updatedAt">Updated At</th>
-              <th class="py-3 px-4 sortable" data-column="pph">PPH</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
+        <div class="overflow-x-auto">
+          <table class="w-full table-auto bg-gray-800 rounded-lg shadow-lg text-sm">
+            <thead class="bg-gray-700">
+              <tr>
+                <th class="py-3 px-4 sortable" data-column="walletAddress">Wallet Address</th>
+                <th class="py-3 px-4 sortable" data-column="verified">Verified</th>
+                <th class="py-3 px-4 sortable" data-column="storageUsage">Storage Usage</th>
+                <th class="py-3 px-4 sortable" data-column="totalCpuCore">CPU Cores</th>
+                <th class="py-3 px-4 sortable" data-column="cpuGhz">CPU GHz</th>
+                <th class="py-3 px-4 sortable" data-column="cpuGhzMax">CPU Max GHz</th>
+                <th class="py-3 px-4 sortable" data-column="totalRamSize">RAM Size</th>
+                <th class="py-3 px-4 sortable" data-column="ramMhz">RAM MHz</th>
+                <th class="py-3 px-4 sortable" data-column="internetSpeed">Internet Speed</th>
+                <th class="py-3 px-4 sortable" data-column="storageType">Storage Type</th>
+                <th class="py-3 px-4 sortable" data-column="type">Node Type</th>
+                <th class="py-3 px-4 sortable" data-column="upTimePerDay">Uptime/Day</th>
+                <th class="py-3 px-4 sortable" data-column="currentPoint">Current Point</th>
+                <th class="py-3 px-4 sortable" data-column="withdrawnPoint">Withdrawn Point</th>
+                <th class="py-3 px-4 sortable" data-column="pingNumberPerDay">Pings/Day</th>
+                <th class="py-3 px-4 sortable" data-column="totalMinuteRun">Total Min Run</th>
+                <th class="py-3 px-4 sortable" data-column="storageUsed">Storage Used</th>
+                <th class="py-3 px-4 sortable" data-column="teraFlops">TeraFlops</th>
+                <th class="py-3 px-4 sortable" data-column="liveTimeMinute">Live Time (Minutes)</th>
+                <th class="py-3 px-4 sortable" data-column="lastPing">Last Ping</th>
+                <th class="py-3 px-4 sortable" data-column="createdAt">Created At</th>
+                <th class="py-3 px-4 sortable" data-column="updatedAt">Updated At</th>
+                <th class="py-3 px-4 sortable" data-column="pph">PPH</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
         </div>
-         <!-- Pagination -->
+        <!-- Pagination -->
         <div class="flex justify-between mt-4">
           <button id="prevPage" class="bg-gray-700 py-2 px-4 rounded-lg">Previous</button>
           <span id="pageInfo" class="text-sm"></span>
@@ -119,27 +119,33 @@
       }
     });
 
+    function sortNodes(column, direction) {
+      nodes.sort((a, b) => {
+        let valA = a[column];
+        let valB = b[column];
+
+        if (typeof valA === 'string') valA = valA.toLowerCase();
+        if (typeof valB === 'string') valB = valB.toLowerCase();
+
+        if (valA < valB) return direction === 'asc' ? -1 : 1;
+        if (valA > valB) return direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
     function displayTable() {
       const tableBody = document.getElementById('tableBody');
       tableBody.innerHTML = '';
 
+      // Sort the full dataset
+      if (sortColumn) {
+        sortNodes(sortColumn, sortDirection);
+      }
+
+      // Paginate
       const start = (currentPage - 1) * rowsPerPage;
       const end = start + rowsPerPage;
       const pageData = nodes.slice(start, end);
-
-      if (sortColumn) {
-        pageData.sort((a, b) => {
-          let valA = a[sortColumn];
-          let valB = b[sortColumn];
-
-          if (typeof valA === 'string') valA = valA.toLowerCase();
-          if (typeof valB === 'string') valB = valB.toLowerCase();
-
-          if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
-          if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
-          return 0;
-        });
-      }
 
       pageData.forEach(node => {
         const row = `
