@@ -41,8 +41,8 @@
     </div>
 
     <!-- Result Table with Pagination and Sorting -->
-    <div class="w-full max-w-4xl overflow-x-auto">
-      <div id="result" class="hidden bg-gray-900 p-6 rounded-lg shadow-lg">
+    <div class="w-full">
+      <div id="result" class="hidden bg-gray-900 p-6 rounded-lg shadow-lg  overflow-x-auto">
         <table class="w-full table-auto bg-gray-800 rounded-lg shadow-lg text-sm">
           <thead class="bg-gray-700">
             <tr>
@@ -73,14 +73,13 @@
           </thead>
           <tbody id="tableBody"></tbody>
         </table>
-
-        <!-- Pagination -->
+      </div>
+      <!-- Pagination -->
         <div class="flex justify-between mt-4">
           <button id="prevPage" class="bg-gray-700 py-2 px-4 rounded-lg">Previous</button>
           <span id="pageInfo" class="text-sm"></span>
           <button id="nextPage" class="bg-gray-700 py-2 px-4 rounded-lg">Next</button>
         </div>
-      </div>
     </div>
   </div>
 
