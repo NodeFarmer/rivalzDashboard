@@ -9,13 +9,31 @@
     .sortable:hover {
       cursor: pointer;
     }
+    .sorted-asc::after {
+      content: ' ▲';
+    }
+    .sorted-desc::after {
+      content: ' ▼';
+    }
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid white;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body class="bg-black text-white font-mono">
 
   <div class="min-h-screen flex flex-col items-center">
     <h1 class="text-center text-4xl font-bold mt-6">Rivalz Dashboard</h1>
-    <span class="text-center text-bold text-gray-400 text-md mb-6">v1.2</span>
+    <span class="text-center text-bold text-gray-400 text-md mb-6">v1.3</span>
 
     <!-- Input form -->
     <div class="w-full max-w-md mb-6">
@@ -24,7 +42,8 @@
         <input type="text" id="walletAddress" placeholder="0x..." class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700 mb-4" />
 
         <button id="fetchData" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg">
-          Fetch Data
+          <span id="fetchText">Load Nodes</span>
+          <span id="spinner" class="hidden spinner"></span>
         </button>
       </div>
     </div>
@@ -66,8 +85,7 @@
                 <th class="py-3 px-4 sortable" data-column="totalMinuteRun">Total Min Run</th>
                 <th class="py-3 px-4 sortable" data-column="storageUsed">Storage Used</th>
                 <th class="py-3 px-4 sortable" data-column="teraFlops">TeraFlops</th>
-                <th class="py-3 px-4 sortable" data-column="liveTimeMinute">Live Time (Minutes)</th>
-                <th class="py-3 px-4 sortable" data-column="lastPing">Last Ping</th>
+                <th class="py-3 px-4 sortable sorted-desc" data-column="lastPing">Last Ping</th>
                 <th class="py-3 px-4 sortable" data-column="createdAt">Created At</th>
                 <th class="py-3 px-4 sortable" data-column="updatedAt">Updated At</th>
                 <th class="py-3 px-4 sortable" data-column="pph">PPH</th>
@@ -90,12 +108,17 @@
     let currentPage = 1;
     const rowsPerPage = 10;
     let nodes = [];
-    let sortColumn = '';
-    let sortDirection = 'asc';
+    let sortColumn = 'lastPing';
+    let sortDirection = 'desc';
 
     document.getElementById('fetchData').addEventListener('click', async () => {
       const walletAddress = document.getElementById('walletAddress').value;
       const url = `https://be.rivalz.ai/api-v1/orbit-db/find-by-wallet-address/${walletAddress}/0/9999`;
+      const fetchText = document.getElementById('fetchText');
+      const spinner = document.getElementById('spinner');
+
+      fetchText.classList.add('hidden');
+      spinner.classList.remove('hidden');
 
       try {
         const response = await fetch(url);
@@ -116,6 +139,9 @@
         }
       } catch (error) {
         alert('Error fetching data. Please try again.');
+      } finally {
+        fetchText.classList.remove('hidden');
+        spinner.classList.add('hidden');
       }
     });
 
@@ -204,6 +230,10 @@
           sortColumn = column;
           sortDirection = 'asc';
         }
+
+        document.querySelectorAll('.sortable').forEach(th => th.classList.remove('sorted-asc', 'sorted-desc'));
+        header.classList.add(sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc');
+
         displayTable();
       });
     });
